@@ -11,13 +11,16 @@ x_train = np.array([
 y = np.array([0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0])
 y_train = keras.utils.to_categorical(y, num_classes=2)
 
-inp = Input((2,))
-out = Dense(2, activation="sigmoid")(inp)
-model = keras.Model(inp, out)
+model = keras.Sequential([
+    Input((2,)),
+    Dense(200, activation="relu"),
+    Dense(300, activation="relu"),
+    Dense(2, activation="sigmoid")
+])
 model.summary()
 
 opt = RMSprop(learning_rate=0.1)
-model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit(x_train, y_train, epochs=50)
 # categorical_crossentropy
 # binary_crossentropy
@@ -28,7 +31,7 @@ temp.shape = (-1, 2,)
 
 result = model.predict(temp)
 
-res = temp[[i for i in range(len(result)) if 0.475 < result[i][0] < 0.525]]
+res = temp[[i for i in range(len(result)) if 0.4 < result[i][0] < 0.6]]
 
 x_0 = x_train[y == 1]
 x_1 = x_train[y == 0]
